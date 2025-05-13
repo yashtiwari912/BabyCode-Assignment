@@ -4,18 +4,6 @@ import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import { ArrowLeft, User, BookOpen } from "lucide-react"
 
-// Mock student data
-const mockStudents = [
-  { id: 1, name: "John Doe", email: "john@example.com", course: "Computer Science", grade: "A" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", course: "Mathematics", grade: "B+" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", course: "Physics", grade: "A-" },
-  { id: 4, name: "Alice Brown", email: "alice@example.com", course: "Computer Science", grade: "B" },
-  { id: 5, name: "Charlie Wilson", email: "charlie@example.com", course: "Biology", grade: "A+" },
-  { id: 6, name: "Diana Miller", email: "diana@example.com", course: "Chemistry", grade: "B-" },
-  { id: 7, name: "Edward Davis", email: "edward@example.com", course: "Mathematics", grade: "C+" },
-  { id: 8, name: "Fiona Garcia", email: "fiona@example.com", course: "Computer Science", grade: "A" },
-]
-
 function StudentDetails() {
   const { id } = useParams()
   const [student, setStudent] = useState(null)
@@ -25,8 +13,17 @@ function StudentDetails() {
     // Simulate API call to fetch student details
     setLoading(true)
     const fetchData = setTimeout(() => {
-      const foundStudent = mockStudents.find((s) => s.id === Number.parseInt(id))
-      setStudent(foundStudent || null)
+      // Get students from localStorage
+      const storedStudents = localStorage.getItem("students")
+
+      if (storedStudents) {
+        const students = JSON.parse(storedStudents)
+        const foundStudent = students.find((s) => s.id === Number.parseInt(id))
+        setStudent(foundStudent || null)
+      } else {
+        setStudent(null)
+      }
+
       setLoading(false)
       console.log("API call for student details completed")
     }, 1000)
@@ -50,7 +47,7 @@ function StudentDetails() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl text-gray-700">Student not found</p>
-          <Link to="/" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
+          <Link to="/dashboard" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
             Back to Dashboard
           </Link>
         </div>
@@ -63,7 +60,7 @@ function StudentDetails() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link to="/" className="mr-4 text-gray-500 hover:text-gray-700">
+            <Link to="/dashboard" className="mr-4 text-gray-500 hover:text-gray-700">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <h1 className="text-xl font-bold text-gray-900">Student Details</h1>
@@ -111,7 +108,7 @@ function StudentDetails() {
 
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-600">
-                  This is a mock student record. In a real application, additional details such as enrollment date,
+                  This is a student record. In a real application, additional details such as enrollment date,
                   attendance records, assignment scores, and other academic information would be displayed here.
                 </p>
               </div>

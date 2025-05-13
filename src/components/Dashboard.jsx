@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
 import StudentList from "./StudentList"
 import FilterBar from "./FilterBar"
-import { Users, LogOut, PlusCircle } from "lucide-react"
+import { LogOut, PlusCircle, Code } from "lucide-react"
 
 // Mock student data
 const mockStudents = [
@@ -27,15 +27,28 @@ function Dashboard({ user, auth }) {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  // Fetch students (mock API call)
+  // Fetch students (mock API call + localStorage)
   useEffect(() => {
     setLoading(true)
+
     // Simulate API call with setTimeout
     const fetchData = setTimeout(() => {
-      console.log("API call completed")
-      setStudents(mockStudents)
-      setFilteredStudents(mockStudents)
+      // Check if we have students in localStorage
+      const storedStudents = localStorage.getItem("students")
+
+      if (storedStudents) {
+        const parsedStudents = JSON.parse(storedStudents)
+        setStudents(parsedStudents)
+        setFilteredStudents(parsedStudents)
+      } else {
+        // If no stored students, use mock data and initialize localStorage
+        setStudents(mockStudents)
+        setFilteredStudents(mockStudents)
+        localStorage.setItem("students", JSON.stringify(mockStudents))
+      }
+
       setLoading(false)
+      console.log("API call completed")
     }, 1000)
 
     return () => clearTimeout(fetchData)
@@ -65,19 +78,10 @@ function Dashboard({ user, auth }) {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-      navigate("/login")
+      navigate("/")
     } catch (error) {
       console.error("Error signing out:", error)
     }
-  }
-
-  // Add new student to the list
-  const addStudent = (student) => {
-    const newStudent = {
-      ...student,
-      id: students.length + 1,
-    }
-    setStudents([...students, newStudent])
   }
 
   return (
@@ -86,8 +90,8 @@ function Dashboard({ user, auth }) {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <Users className="h-8 w-8 text-blue-500 mr-2" />
-            <h1 className="text-xl font-bold text-gray-900">Student Dashboard</h1>
+            <Code className="h-8 w-8 text-blue-600 mr-2" />
+            <h1 className="text-xl font-bold text-gray-900">BabyCode Dashboard</h1>
           </div>
 
           <div className="flex items-center gap-4">

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { createUserWithEmailAndPassword } from "firebase/auth"
-import { Users } from "lucide-react"
+import { Code } from "lucide-react"
 
 function Signup({ auth }) {
   const [email, setEmail] = useState("")
@@ -33,7 +33,7 @@ function Signup({ auth }) {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password)
-      navigate("/")
+      navigate("/dashboard") // Redirect to dashboard after signup
     } catch (error) {
       setError(error.message)
     } finally {
@@ -45,9 +45,10 @@ function Signup({ auth }) {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <Users className="h-12 w-12 text-blue-500" />
+          <Code className="h-12 w-12 text-blue-500" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create a new account</h2>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">BabyCode</h2>
+        <p className="mt-2 text-center text-xl text-gray-600">Create a new account</p>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{" "}
           <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
@@ -142,7 +143,7 @@ function Signup({ auth }) {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">Or</span>
               </div>
             </div>
 
@@ -151,7 +152,7 @@ function Signup({ auth }) {
                 to="/"
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
               >
-                Continue as Guest
+                Back to Home
               </Link>
             </div>
           </div>

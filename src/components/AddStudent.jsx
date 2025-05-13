@@ -32,16 +32,22 @@ function AddStudent() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      console.log("Student added:", student)
 
-      // In a real app, you would make an API call here
-      // const response = await fetch('/api/students', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(student)
-      // });
+      // Get existing students from localStorage or initialize empty array
+      const existingStudents = JSON.parse(localStorage.getItem("students") || "[]")
 
-      navigate("/")
+      // Create new student with ID
+      const newStudent = {
+        ...student,
+        id: existingStudents.length > 0 ? Math.max(...existingStudents.map((s) => s.id)) + 1 : 1,
+      }
+
+      // Add to localStorage
+      localStorage.setItem("students", JSON.stringify([...existingStudents, newStudent]))
+
+      console.log("Student added:", newStudent)
+
+      navigate("/dashboard")
     } catch (error) {
       console.error("Error adding student:", error)
     } finally {
@@ -54,7 +60,7 @@ function AddStudent() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
-            <Link to="/" className="mr-4 text-gray-500 hover:text-gray-700">
+            <Link to="/dashboard" className="mr-4 text-gray-500 hover:text-gray-700">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <h1 className="text-xl font-bold text-gray-900">Add New Student</h1>
@@ -138,7 +144,7 @@ function AddStudent() {
 
             <div className="mt-6 flex items-center justify-end gap-3">
               <Link
-                to="/"
+                to="/dashboard"
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Cancel

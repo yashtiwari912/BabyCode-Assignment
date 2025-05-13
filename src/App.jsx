@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { useState, useEffect } from "react"
 
 // Components
+import LandingPage from "./components/LandingPage"
 import Dashboard from "./components/Dashboard"
 import Login from "./components/Login"
 import Signup from "./components/Signup"
@@ -21,7 +22,6 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
@@ -49,9 +49,17 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard user={user} auth={auth} />} />
-        <Route path="/login" element={<Login auth={auth} />} />
-        <Route path="/signup" element={<Signup auth={auth} />} />
+        {/* Landing page as the default route - pass user state */}
+        <Route path="/" element={<LandingPage user={user} />} />
+
+        {/* Dashboard route */}
+        <Route path="/dashboard" element={user ? <Dashboard user={user} auth={auth} /> : <Navigate to="/login" />} />
+
+        {/* Authentication routes */}
+        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login auth={auth} />} />
+        <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup auth={auth} />} />
+
+        {/* Protected routes */}
         <Route
           path="/student/:id"
           element={

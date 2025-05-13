@@ -127,7 +127,7 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 ## 📬 Contact
-Developed by [Yash](https://github.com/yashtiwari912)  
+Developed by [Yash Tiwari](https://github.com/yashtiwari912)  
 📫 Connect on [LinkedIn](https://www.linkedin.com/in/yash-tiwari-237312287/)
 
 ---
